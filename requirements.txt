@@ -5,3 +5,5 @@ seaborn
 pandasai
 openai
 python-dotenv
+pandasai>=1.5.9
+
