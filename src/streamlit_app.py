@@ -1,6 +1,7 @@
 import streamlit as st
-
 import re
+import pandas as pd 
+
 st.set_page_config(layout="centered", page_title="Excel Data Cleaner")
 
 st.title("Excel Data Cleaner and Processor")
