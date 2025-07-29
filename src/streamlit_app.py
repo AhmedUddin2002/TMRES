@@ -6,68 +6,49 @@ from pandasai.llm.openai import OpenAI
 import matplotlib.pyplot as plt
 import seaborn as sns
 import io
-# ---- SETUP ----
-# Set your OpenAI API Key
-os.environ["OPENAI_API_KEY"] = "your-openai-key-here"  # Replace with your key
+import re
+st.set_page_config(layout="centered", page_title="Excel Data Cleaner")
 
-st.set_page_config(page_title="AI Dashboard Analyzer", layout="wide")
-st.title("📊 AI-Powered Natural Language Dashboard Generator")
+st.title("Excel Data Cleaner and Processor")
+st.markdown("Upload your Excel file (`.xlsx`), and I'll clean and process the admission data for you.")
 
-# ---- FILE UPLOAD ----
-uploaded_file = st.file_uploader("Upload your dataset (CSV format)", type=["csv"])
+uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.subheader("Dataset Preview")
-    st.dataframe(df.head(), use_container_width=True)
+    st.success("File uploaded successfully!")
+    st.info("Processing your data...")
 
-    # ---- AUTO DASHBOARD ----
-    st.subheader("📈 Automated Insights Dashboard")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**📌 Basic Statistics**")
-        st.write(df.describe(include='all'))
+    try:
+        # Read the Excel file into a DataFrame
+        # skiprows=5 is used to align with the data starting from the 6th row (0-indexed)
+        df_raw_uploaded = pd.read_excel(uploaded_file, skiprows=5)
 
-    with col2:
-        st.markdown("**🧭 Data Info**")
-        buffer = io.StringIO()
-        df.info(buf=buffer)
-        s = buffer.getvalue()
-        st.text(s)
+        # Process the data using the defined function
+        df_cleaned = clean_admission_data(df_raw_uploaded)
 
-    st.markdown("---")
-    st.subheader("📊 Visualizations")
+        st.success("Data processed successfully!")
 
-    numeric_cols = df.select_dtypes(include='number').columns.tolist()
-    categorical_cols = df.select_dtypes(include='object').columns.tolist()
+        st.subheader("Preview of Cleaned Data:")
+        st.dataframe(df_cleaned.head()) # Display first few rows
 
-    if len(numeric_cols) >= 2:
-        st.markdown("**Correlation Heatmap**")
-        corr = df[numeric_cols].corr()
-        fig, ax = plt.subplots()
-        sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
-        st.pyplot(fig)
+        # Provide download option for the cleaned CSV
+        csv_buffer = io.StringIO()
+        df_cleaned.to_csv(csv_buffer, index=False)
+        st.download_button(
+            label="Download Cleaned Data as CSV",
+            data=csv_buffer.getvalue(),
+            file_name="Cleaned_Admission_Data.csv",
+            mime="text/csv",
+        )
 
-    if len(numeric_cols) > 0:
-        selected_col = st.selectbox("Select a numeric column to plot distribution", numeric_cols)
-        fig, ax = plt.subplots()
-        sns.histplot(df[selected_col], kde=True, ax=ax)
-        st.pyplot(fig)
+    except Exception as e:
+        st.error(f"An error occurred during processing: {e}")
+        st.warning("Please ensure your Excel file has the expected structure, especially the header rows and column count.")
+        st.expander("Click to see error details").exception(e)
 
-    # ---- LLM POWERED CHAT ----
-    st.markdown("---")
-    st.subheader("💬 Ask Questions About Your Data")
-
-    llm = OpenAI()  # Initialized with key from env var
-    sdf = SmartDataframe(df, config={"llm": llm})
-
-    query = st.text_input("Ask a question in plain English (e.g., 'What are top 5 products by sales?')")
-
-    if query:
-        with st.spinner("Thinking..."):
-            try:
-                response = sdf.chat(query)
-                st.success("Answer:")
-                st.write(response)
-            except Exception as e:
-                st.error(f"Error: {e}")
+else:
+    st.info("Please upload an Excel file to get started.")
+    st.markdown("""
+    **Expected Excel File Structure:**
+    Your Excel file should have introductory rows, and the actual data (starting with 'S.No', 'District', etc.) should begin from the **6th row** (row index 5 if 0-indexed).
+    """)
