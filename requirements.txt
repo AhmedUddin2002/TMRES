@@ -6,4 +6,3 @@ seaborn
 openai
 pandasai
 python-dotenv
-re
