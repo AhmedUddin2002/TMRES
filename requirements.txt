@@ -1,3 +1,7 @@
-altair
-pandas
 streamlit
+pandas
+matplotlib
+seaborn
+pandasai
+openai
+python-dotenv
