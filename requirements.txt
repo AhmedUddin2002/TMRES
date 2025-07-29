@@ -1,10 +1,8 @@
-streamlit
-numpy==1.24.4 
+streamlit==1.27.2
 pandas==1.5.3
-matplotlib
-seaborn
-pandasai
-openai
+numpy==1.21.6
+matplotlib==3.5.3
+seaborn==0.11.2
+openai==1.6.1
+pandasai==1.4.2
 python-dotenv
-pandasai>=1.5.9
-
