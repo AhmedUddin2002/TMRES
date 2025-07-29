@@ -1,11 +1,5 @@
 import streamlit as st
-import pandas as pd
-import os
-from pandasai import SmartDataframe
-from pandasai.llm.openai import OpenAI
-import matplotlib.pyplot as plt
-import seaborn as sns
-import io
+
 import re
 st.set_page_config(layout="centered", page_title="Excel Data Cleaner")
 
