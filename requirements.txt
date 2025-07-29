@@ -6,3 +6,4 @@ seaborn==0.12.2
 openai==0.27.8
 pandasai==1.4.2
 python-dotenv
+re
