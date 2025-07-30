@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Excel File Uploader")
+st.title("Excel File Uploaderrr")
 
 uploaded_file = st.file_uploader("Choose an Excel file", type=["xlsx", "xls"])
 
