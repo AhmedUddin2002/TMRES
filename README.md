@@ -10,7 +10,10 @@ tags:
 pinned: false
 short_description: Streamlit template space
 ---
-
+app_file: app.py
+spaces:
+  storage: persistent  # <-- This enables file uploads
+---  
 # Welcome to Streamlit!
 
 Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
