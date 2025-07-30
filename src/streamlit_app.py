@@ -8,7 +8,7 @@ st.set_page_config(page_title="Excel to Cleaned CSV", layout="centered")
 st.title("📊 Clean Admission Excel Data")
 st.write("Upload the Excel file and download the cleaned CSV file.")
 
-uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
+uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"], accept_multiple_files=False)
 
 if uploaded_file is not None:
     try:
